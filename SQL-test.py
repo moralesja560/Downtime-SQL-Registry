@@ -22,9 +22,23 @@ df.head()
 
 print(df)
 
-mydict = {'1830':'Jorge Morales',
-		'1831':'Ernesto Barron',
-		'2756':'Bryan Monroy'
+mydict = {562: "Erik Gaytan",
+		568: "Jorge Perez",
+		986: "Alejandro Lopez",
+		1471: "Omar Hernandez",
+		1476: "Pablo Garcia",
+		1881: "Eduardo Rodriguez",
+		2693: "Francisco Perez",
+		2786: "Carlos Darley",
+		3939: "Rodrigo Gutierrez",
+		4025: "Enrique Munoz",
+		4045: "Jose Salazar",
+		4281: "Osvaldo Gutierrez",
+		4383: "Diego Hernandez",
+		1830: "Jorge Morales",
+		734:  "Angel Irigoyen",
+		3840: "Ernesto Barron",
+		4146: "Bryan Monroy"
 		}
 
 nueva_info = pd.DataFrame(mydict.items(), columns=['Empl_Number', 'Empl_Name'])
