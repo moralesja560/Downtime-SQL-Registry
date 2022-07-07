@@ -20,5 +20,4 @@ mtto_df = pd.read_csv(resource_path(r"resources/mtto_data.csv"),header=0,usecols
 #nueva_info = pd.DataFrame(mtto_df, columns=['NUM','LINEA','MAQUINA','COMPONENTE','CONDICION_FALLA','ACCION_INMEDIATA','MAQUINA_1','CAUSA','Minutos_TM','FECHA','SEMANA','RESPONSABLE','TURNO','Aplica'])
 
 print(mtto_df)
-
 mtto_df.to_sql('Test2_MTTO_History', con=engine, if_exists='append')
