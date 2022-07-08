@@ -1,13 +1,26 @@
 #This procedure will upload user-input data into the designated SQL table
 
+
+#pendientes:
+
+# actualiza la tabla con la maquina y empieza a crear el userform.
+# ya jala el sistema de carga y descarga via SQL
+# empieza a ver errores de entrada y asegurar con el userform el sistema.
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pandas as pd
 import sys
 import os
 from datetime import *
+import datetime
 
-
+def convert(date_time):
+	new_datetime = date_time.replace("/"," ")
+	format = '%d %m %Y'  # The format
+	datetime_str = datetime.datetime.strptime(new_datetime, format).isocalendar()[1]
+ 
+	return datetime_str
 
 engine = create_engine('mssql+pyodbc://scadamex:scadamex@SAL-W12E-SQL\MSSQLMEX/scadadata?driver=SQL+Server+Native+Client+11.0', echo=True)
 
@@ -47,8 +60,7 @@ dicc = {'NUM': max_number+1,
 #Step 1: ask for user input and store in a python list.
 for i in range(0,12):
 	if i == 8:
-		weeknum =  datetime.date(dicc['FECHA'])
-		val = weeknum.strftime("%U")
+		val = convert(dicc["FECHA"])
 	else:
 		val = input(f"Please input {columns[i+1]}:  ")
 		
@@ -57,5 +69,5 @@ for i in range(0,12):
 
 mtto_df = pd.DataFrame([dicc])
 print(mtto_df)
-#mtto_df.to_sql('Temp3_Mtto_Log', con=engine, if_exists='append',index=False)
+mtto_df.to_sql('Temp3_Mtto_Log', con=engine, if_exists='append',index=False)
 
