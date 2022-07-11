@@ -101,14 +101,14 @@ class Passwordchecker(tk.Frame):
 			globals()[a_temp].place(x =int(rows[i-1][2]),y=int(rows[i-1][3]))
 			globals()[a_temp].configure(bg = self.bg_offset)
 			globals()[a_temp].configure(fg = self.fg_offset)
-			globals()[a_temp].configure(font=("Helvetica", 8, "bold"))
+			globals()[a_temp].configure(font=("Helvetica", 12, "bold"))
 			globals()[a_temp].configure(text = rows[i-1][4])
 			#self.selector is the function inside the main class
 			globals()[a_temp].configure(command=partial(self.Selector, int(rows[i-1][5])))
 
-			self.console = Label(self.parent,width = w_offset*15, height = h_offset)
-			self.console.place(x=475,y=695)
-			self.console.configure(text = "")
+			self.console = Label(self.parent,width = w_offset*10, height = h_offset)
+			self.console.place(x=350,y=410)
+			self.console.configure(text = "HI")
 			self.console.configure(fg="white", bg="black", font=("Console",10))
 ######### Create Dropdown menus for COM options 
 		#ComPort.
@@ -116,8 +116,8 @@ class Passwordchecker(tk.Frame):
 		dropfront = "white"
 		dropbg = '#314a94'
 		dropfont = ("Sans-serif",10)
-		dropx = 405
-		dropy = 351
+		dropx = 229
+		dropy = 30
 
 		#machines
 		speeds = [9600,19200,38400,57600,115200]
@@ -126,6 +126,9 @@ class Passwordchecker(tk.Frame):
 		dropdown2 = OptionMenu(self.parent,self.baudRate1,*speeds)
 		dropdown2.place(x=int(dropx),y=int(dropy)+30)
 		dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)
+
+
+
 
 
 ##########Selector is the function that commands buttons actions
