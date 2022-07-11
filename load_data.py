@@ -33,16 +33,19 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-sql = "SELECT NUM FROM Temp3_Mtto_Log"
+sql = "SELECT NUM FROM Temp_4_Mtto_Log"
 df = pd.read_sql_query(sql, engine)
-df.to_string()
 
-max_number = df["NUM"].iloc[-1]
+try: 
+	max_number = df["NUM"].iloc[-1]
+except:
+	max_number = 1
 
-columns = ["NUM","LINEA","COMPONENTE","CONDICION","ACCION","CODIGO_MAQUINA","CAUSA","MINUTOS","FECHA","SEMANA","RESPONSABLE","TURNO","APLICA"]
+columns = ["NUM","LINEA","MAQUINA","COMPONENTE","CONDICION","ACCION","CODIGO_MAQUINA","CAUSA","MINUTOS","FECHA","SEMANA","RESPONSABLE","TURNO","APLICA"]
 
 dicc = {'NUM': max_number+1, 
 		'LINEA': 'linea',
+		"MAQUINA": 'maq',
 		"COMPONENTE": 'compo',
 		"CONDICION": 'condi',
 		"ACCION": 'accion',
@@ -58,16 +61,15 @@ dicc = {'NUM': max_number+1,
 
 
 #Step 1: ask for user input and store in a python list.
-for i in range(0,12):
-	if i == 8:
+for i in range(len(dicc)-1):
+	if i == 9:
 		val = convert(dicc["FECHA"])
 	else:
 		val = input(f"Please input {columns[i+1]}:  ")
-		
 	print(f"el ciclo {i} va con la columna {columns[i+1]} ")
 	dicc.update({columns[i+1]:val})
 
 mtto_df = pd.DataFrame([dicc])
 print(mtto_df)
-mtto_df.to_sql('Temp3_Mtto_Log', con=engine, if_exists='append',index=False)
+mtto_df.to_sql('Temp_4_Mtto_Log', con=engine, if_exists='append',index=False)
 
