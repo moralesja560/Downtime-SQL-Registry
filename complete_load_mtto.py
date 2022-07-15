@@ -39,6 +39,7 @@ def resource_path(relative_path):
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
+
 #/////----------------------------Reading and Writing Files--------------------------#
 
 with open(resource_path("resources/basic_btn_data.csv")) as file:
@@ -55,12 +56,7 @@ with open(resource_path("resources/basic_btn_data.csv")) as file:
 
 #Original data 
 machines = pd.read_csv(resource_path('resources/machines.csv'))
-
-
-#single column dataframe with lines
 df1 = machines['Linea'].unique()
-
-
 
 #a text file output that will serve as a receipt for the upload
 
@@ -130,34 +126,44 @@ class Passwordchecker(tk.Frame):
 		dropy = 30
 
 		#list area
-
 		#machines
-		self.baudRate1 = StringVar()
-		self.baudRate1.set("Linea")
-		dropdown2 = OptionMenu(self.parent,self.baudRate1,*df1)
-		dropdown2.place(x=int(dropx),y=int(dropy)+30)
-		dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)
+		self.D_Linea = StringVar()
+		self.D_Linea.set("Linea")
+		self.dropdown2 = OptionMenu(self.parent,self.D_Linea,*df1)
+		self.dropdown2.place(x=int(dropx),y=int(dropy)+35)
+		self.dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)
 
+		
+		self.D_Linea.trace("w",self.machine_selector)
 
+		self.D_Machine = StringVar()
+		self.D_Machine.set("Maquina")
+		self.dropdown3 = OptionMenu(self.parent,self.D_Machine, ' ')
+		self.dropdown3.place(x=int(dropx)+500,y=int(dropy)+35)
+		self.dropdown3.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)		
 
+		self.D_Machine.trace("w",self.component_selector)
 
-
-
-
-
-
+		self.D_Component = StringVar()
+		self.D_Component.set("Componente")
+		self.dropdown4 = OptionMenu(self.parent,self.D_Component, ' ')
+		self.dropdown4.place(x=int(dropx)+500,y=int(dropy)+55)
+		self.dropdown4.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)		
 
 
 
 ##########Selector is the function that commands buttons actions
 	def Selector(self,num):
-
+		global ComPort
 		#go to def run() in thread 2 and config it to pass these variables to the method1 second thread.	
 		#### area to check if the info coming from the optionmenu is valid and all the option menus were opened and selected.
 			
 		#button to Open COM
 		if num == 10:
 			print('10')
+			ComPort = self.D_Linea.get()
+			print(ComPort)
+			SecondThread.start()
 		#button to close COM
 		if num == 20:
 			print('20')
@@ -170,12 +176,51 @@ class Passwordchecker(tk.Frame):
             #In order to use quit function, mainWindow MUST BE an attribute of Interface. 
 			self.parent.destroy()
 			self.parent.quit()
+			SecondThread.stop()
 
-	def method1(self,ComPort,baudRate,Parity_data,stop_bits,byte_size): 
+
+	def method1(self,ComPort): 
 		#This is the area where the second thread lives.
 		while finish is not True:
-			print("second thread")
+			print(f"second thread: {ComPort}")
 			time.sleep(5)
+	
+	def machine_selector(self,*args):
+		global df3
+		#pandas dataframe is already loaded
+		#single column dataframe with lines
+		valor = self.D_Linea.get()
+		#print(valor)
+		df2=machines.query("Linea == @valor")
+		#print(df2)
+		df3 = df2['MAQUINA'].unique()
+		df3.sort()
+		menu = self.dropdown3['menu']
+		menu.delete(0, 'end')
+		for maquinas in df3:
+			menu.add_command(label=maquinas, command=lambda data=maquinas: self.D_Machine.set(data))
+
+	def component_selector(self,*args):
+		global df6
+		#pandas dataframe is already loaded
+		#single column dataframe with lines
+		valor1 = self.D_Linea.get()
+		valor2 = self.D_Machine.get()
+		#print(valor)
+		df2=machines.query("Linea == @valor1")
+		df5=df2.query("MAQUINA == @valor2")
+		df6 = df5['COMPONENTE'].unique()
+		#WE SORT THIS
+		print(df6)
+		df6.sort()
+		menu = self.dropdown4['menu']
+		menu.delete(0, 'end')
+		for components in df6:
+			menu.add_command(label=components, command=lambda data=components: self.D_Component.set(data))	
+
+
+
+
 
 		
 #################Threading area 
@@ -194,8 +239,9 @@ class Process(threading.Thread):
 		global finish
 		#while not finish:
 			#do not start serial until com info is selected.
-		run1.method1()
-		run1.console.configure(text = f"Proceso Terminado")
+		run1.method1(ComPort)
+		#run1.console.configure(text = f"Proceso Terminado")
+
 	
 	def stop(self):
 		self._stop_event.set()
@@ -210,3 +256,9 @@ if __name__ == '__main__':
 	root.mainloop() #GUI.start()
 	#print("Exiting....")
 	finish = True
+
+#main thread is not in main loop error was raising because i was trying to run the next GUI command
+	#run1.console.configure(text = f"Proceso Terminado")
+#after i executed root.destroy() and root.quit().
+# i finished the process then i tried to execute a GUI command. What an error.
+
