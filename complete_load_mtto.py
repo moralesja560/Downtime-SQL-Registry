@@ -51,6 +51,16 @@ with open(resource_path("resources/basic_btn_data.csv")) as file:
 	for row in csvreader:
 		rows.append(row)
 
+####### machine loader CSV
+
+#Original data 
+machines = pd.read_csv(resource_path('resources/machines.csv'))
+
+
+#single column dataframe with lines
+df1 = machines['Linea'].unique()
+
+
 
 #a text file output that will serve as a receipt for the upload
 
@@ -119,13 +129,21 @@ class Passwordchecker(tk.Frame):
 		dropx = 229
 		dropy = 30
 
+		#list area
+
 		#machines
-		speeds = [9600,19200,38400,57600,115200]
 		self.baudRate1 = StringVar()
-		self.baudRate1.set("9600")
-		dropdown2 = OptionMenu(self.parent,self.baudRate1,*speeds)
+		self.baudRate1.set("Linea")
+		dropdown2 = OptionMenu(self.parent,self.baudRate1,*df1)
 		dropdown2.place(x=int(dropx),y=int(dropy)+30)
 		dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)
+
+
+
+
+
+
+
 
 
 
