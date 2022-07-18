@@ -5,6 +5,15 @@
 # JorgeAlberto.Morales@mubea.com
 #---------------------------------------------------#
 
+#Pendientes
+#Colocar todos los iconos en su lugar
+#probar que se cargan bien y que puedo extraer la información
+#pasar las variables al thread secundario para que cargue la info a SQL
+#crear un TXT con el log de SQL y el registro como comprobante de que sí se subió
+#aviso via telegram de la subida.
+
+
+
 
 #----------------------import area
 from sqlalchemy import create_engine
