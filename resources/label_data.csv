@@ -1,0 +1,5 @@
+Nombre,label_name,x_pos,y_pos,text,command,Width,Height,FontSize
+Title,Title1,600,50,Ingreso de Reporte de Mantenimiento a Base de Datos SQL,10,60,2,16
+Lab1,Linea1,50,150,Linea de Produccion,10,20,2,12
+Lab2,Maq1,50,200,Maquina/Equipo,10,20,2,12
+Lab2,Comp1,50,250,Componente,10,20,2,12

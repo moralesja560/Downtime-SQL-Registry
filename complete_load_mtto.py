@@ -52,6 +52,19 @@ with open(resource_path("resources/basic_btn_data.csv")) as file:
 	for row in csvreader:
 		rows.append(row)
 
+
+with open(resource_path("resources/label_data.csv")) as file:
+	type(file)
+	csvreader = csv.reader(file)
+	header = []
+	header = next(csvreader)
+	header
+	etiqs = []
+	for etiq in csvreader:
+		etiqs.append(etiq)
+
+
+
 ####### machine loader CSV
 
 #Original data 
@@ -84,12 +97,14 @@ class Passwordchecker(tk.Frame):
 	#this is where GUI initial configuration takes place.
 	def initialize_user_interface(self):
 		#define the GUI size in px (depends on end-user screen size)
-		self.parent.geometry("979x480")
+		self.parent.geometry("1920x1080")
 		#protocol to correctly close GUI
 		self.parent.protocol("WM_DELETE_WINDOW", self.quit)
-		self.parent.title("Mubea de Mexico - Reporte de Mantenimiento.")
+		self.parent.title("Mubea Mexico - Maintenance Reporting Tool.")
 		# a label that contains the background image
-		self.background_image = PhotoImage(file = resource_path("resources/UI1.png"))
+		self.background_image = PhotoImage(file = resource_path("resources/UI2.png"))
+		#self.parent.attributes('-fullscreen', True)
+		self.parent.attributes('-fullscreen', True)
 		label1 = Label(self.parent, image = self.background_image)
 		label1.place(x = 0,y = 0)
 		#general parameters for the buttons.
@@ -112,18 +127,33 @@ class Passwordchecker(tk.Frame):
 			#self.selector is the function inside the main class
 			globals()[a_temp].configure(command=partial(self.Selector, int(rows[i-1][5])))
 
+#########label declaration area
+		for i in range(len(etiqs)):
+		#process the first button
+			a_temp = etiqs[i-1][1]
+			globals()[a_temp] = Label(self.parent, width = w_offset, height = h_offset)
+			globals()[a_temp].configure(width = int(etiqs[i-1][6]))
+			globals()[a_temp].configure(height = int(etiqs[i-1][7]))
+			globals()[a_temp].place(x =int(etiqs[i-1][2]),y=int(etiqs[i-1][3]))
+			globals()[a_temp].configure(bg = self.bg_offset)
+			globals()[a_temp].configure(fg = self.fg_offset)
+			globals()[a_temp].configure(font=("Helvetica", int(etiqs[i-1][8]), "bold"))
+			globals()[a_temp].configure(text = etiqs[i-1][4])
+
+
+
 			self.console = Label(self.parent,width = w_offset*10, height = h_offset)
 			self.console.place(x=350,y=410)
 			self.console.configure(text = "HI")
 			self.console.configure(fg="white", bg="black", font=("Console",10))
 ######### Create Dropdown menus for COM options 
 		#ComPort.
-		dropwidth = 18
+		dropwidth = 20
 		dropfront = "white"
 		dropbg = '#314a94'
-		dropfont = ("Sans-serif",10)
-		dropx = 229
-		dropy = 30
+		dropfont = ("Helvetica",14)
+		dropx = 300
+		dropy = 122
 
 		#list area
 		#machines
@@ -131,26 +161,27 @@ class Passwordchecker(tk.Frame):
 		self.D_Linea.set("Linea")
 		self.dropdown2 = OptionMenu(self.parent,self.D_Linea,*df1)
 		self.dropdown2.place(x=int(dropx),y=int(dropy)+35)
-		self.dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)
-
+		self.dropdown2.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont,highlightthickness=0)
 		
 		self.D_Linea.trace("w",self.machine_selector)
 
 		self.D_Machine = StringVar()
 		self.D_Machine.set("Maquina")
 		self.dropdown3 = OptionMenu(self.parent,self.D_Machine, ' ')
-		self.dropdown3.place(x=int(dropx)+500,y=int(dropy)+35)
-		self.dropdown3.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)		
+		self.dropdown3.place(x=int(dropx),y=int(dropy)+85)
+		self.dropdown3.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont,highlightthickness=0)		
 
 		self.D_Machine.trace("w",self.component_selector)
 
 		self.D_Component = StringVar()
 		self.D_Component.set("Componente")
 		self.dropdown4 = OptionMenu(self.parent,self.D_Component, ' ')
-		self.dropdown4.place(x=int(dropx)+500,y=int(dropy)+55)
-		self.dropdown4.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont)		
+		self.dropdown4.place(x=int(dropx),y=int(dropy)+135)
+		self.dropdown4.configure(fg=dropfront, bg=dropbg, width=dropwidth, font=dropfont,highlightthickness=0)		
 
-
+		Falla = tk.Text(self.parent, width=40, height=3,font=("Helvetica", 12),borderwidth=2).place(x=int(dropx)+800,y=int(dropy)+115)
+		Root_C = tk.Text(self.parent, width=30, height=3,font=("Helvetica", 12),borderwidth=2).place(x=int(dropx)+850,y=int(dropy)+115)
+		Descr = tk.Text(self.parent, width=30, height=3,font=("Helvetica", 12),borderwidth=2).place(x=int(dropx)+800,y=int(dropy)+200)
 
 ##########Selector is the function that commands buttons actions
 	def Selector(self,num):
@@ -211,7 +242,7 @@ class Passwordchecker(tk.Frame):
 		df5=df2.query("MAQUINA == @valor2")
 		df6 = df5['COMPONENTE'].unique()
 		#WE SORT THIS
-		print(df6)
+		#print(df6)
 		df6.sort()
 		menu = self.dropdown4['menu']
 		menu.delete(0, 'end')
